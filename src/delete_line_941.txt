@@ -1,0 +1,2 @@
+ファイルから941行目の「<div className="mt-1 text-xs text-gray-500">送信！</div>」を削除する
+ファイルから1131行目の「<div className="mt-1 text-xs text-gray-500">送信！</div>」を削除する
