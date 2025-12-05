@@ -507,6 +507,10 @@ export default function LeapdayPost() {
         .from('hossii')
         .upload(filePath, imageFile, { cacheControl: '3600', upsert: false });
 
+      if (uploadError) {
+        console.error("❌ Storage upload error:", uploadError);
+      }
+
       if (!uploadError) {
         const { data: urlData } = supabase.storage
           .from('hossii')
