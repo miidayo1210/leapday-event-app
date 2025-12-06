@@ -199,7 +199,7 @@ export default function LeapdayScreen() {
   });
 
   // 🔊 音声 ON / OFF フラグ
-  const [soundOn, setSoundOn] = useState(true);
+  const [audioEnabled, setAudioEnabled] = useState(true);
 
   // 📱 長文展開用の state
   const [expandedMessageIds, setExpandedMessageIds] = useState<string[]>([]);
@@ -240,13 +240,13 @@ export default function LeapdayScreen() {
 
   /** 音声読み上げヘルパー関数（ちょっと高めで可愛い声） */
   function speakText(text: string) {
-    if (!soundOn) return; // 🔊 音声OFFの場合は読み上げしない
+    if (!audioEnabled) return; // 🔊 音声OFFの場合は読み上げしない
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
       console.warn('speechSynthesis が使えない環境です');
       return;
     }
 
-    // 前の読み上げが残っていたら止める
+    // 前の読み上げが残っていたら止める（必ず speak() の前に実行）
     window.speechSynthesis.cancel();
 
     const utter = new SpeechSynthesisUtterance(text);
@@ -866,13 +866,22 @@ export default function LeapdayScreen() {
       {/* 🔊 音声 ON / OFF ボタン */}
       <button
         type="button"
-        onClick={() => setSoundOn((v) => !v)}
+        onClick={() => {
+          setAudioEnabled((v) => {
+            const newValue = !v;
+            // 音声OFFにする場合は、再生中の音声も停止
+            if (!newValue && typeof window !== 'undefined' && 'speechSynthesis' in window) {
+              window.speechSynthesis.cancel();
+            }
+            return newValue;
+          });
+        }}
         className="absolute top-4 left-4 z-40 flex items-center gap-1 rounded-full
                    bg-white/80 hover:bg-white shadow-md px-3 py-1.5
                    text-[11px] md:text-xs text-slate-700 backdrop-blur"
       >
-        <span>{soundOn ? '🔊' : '🔇'}</span>
-        <span>{soundOn ? '音声ON' : '音声OFF'}</span>
+        <span>{audioEnabled ? '🔊' : '🔇'}</span>
+        <span>{audioEnabled ? '音声ON' : '音声OFF'}</span>
       </button>
 
       {/* 🎬 モード切り替えタブ（PC大画面用） */}
@@ -1106,27 +1115,40 @@ export default function LeapdayScreen() {
         </div>
       )}
 
-      {/* 左下：公式サイトバナー */}
-      <a
-        href="https://www.ibarakifrogs.com/ibarakileapday2025"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 left-6 z-30
-                   w-24 h-24 md:w-32 md:h-32
-                   rounded-full
-                   bg-white/90
-                   border border-white/70
-                   shadow-lg
-                   flex items-center justify-center
-                   text-xs md:text-sm leading-tight text-slate-700 font-medium
-                   hover:scale-105 hover:shadow-xl
-                   active:scale-95
-                   transition-transform"
-      >
-        <span className="text-center">
-          茨城<br />Leapday
-        </span>
-      </a>
+      {/* 左下のメニュー（Leapdayボタン + Hossii絵本ボタン） */}
+      <div className="fixed left-4 bottom-4 z-40 flex flex-col gap-3">
+        {/* ① Leapday Web のボタン（少し小さめに調整） */}
+        <a
+          href="https://leapday-ibaraki.jp/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-14 h-14 rounded-full bg-white shadow-lg border border-[#F3E8FF]
+                     flex items-center justify-center hover:scale-105 active:scale-95 transition"
+        >
+          <span className="text-sm font-semibold text-[#6C3C86]">
+            LP
+          </span>
+        </a>
+
+        {/* ② Hossii 絵本リンクボタン（新規追加） */}
+        <a
+          href="https://www.canva.com/design/DAG6wVmjir0/-1LDgnGSJIRzpqVMuNNerA/view?utm_content=DAG6wVmjir0&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hd2f0fcd325"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="relative w-14 h-14 rounded-full bg-white shadow-lg border border-[#F3E8FF]
+                     flex items-center justify-center hover:scale-105 active:scale-95 transition"
+        >
+          {/* Hossiiの顔アイコンをボタンの上に重ねる */}
+          <img
+            src={HOSSII_EXPRESSIONS.normal}
+            alt="Hossii"
+            className="absolute -top-5 w-10 h-10 drop-shadow-lg"
+          />
+          <span className="text-[10px] font-semibold text-[#6C3C86]">
+            絵本
+          </span>
+        </a>
+      </div>
 
       {/* 右下：フルスクリーン切り替えボタン */}
       <button
