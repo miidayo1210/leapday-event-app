@@ -696,6 +696,8 @@ export default function LeapdayScreen() {
       setShowHossiiQuote(true);
 
       // 🎤 音声読み上げ（応援コメントがある場合）
+      if (!audioEnabled) return; // 🔊 音声OFFの場合は読み上げしない
+
       const speakable = actions.filter(
         (a) =>
           a.channel === 'support' &&
@@ -1116,38 +1118,52 @@ export default function LeapdayScreen() {
       )}
 
       {/* 左下のメニュー（Leapdayボタン + Hossii絵本ボタン） */}
-      <div className="fixed left-4 bottom-4 z-40 flex flex-col gap-3">
-        {/* ① Leapday Web のボタン（少し小さめに調整） */}
-        <a
-          href="https://leapday-ibaraki.jp/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-14 h-14 rounded-full bg-white shadow-lg border border-[#F3E8FF]
-                     flex items-center justify-center hover:scale-105 active:scale-95 transition"
-        >
-          <span className="text-sm font-semibold text-[#6C3C86]">
-            LP
+      <div className="fixed left-4 bottom-4 z-50 flex flex-col gap-3">
+        {/* ① Hossii 絵本リンクボタン */}
+        <div className="flex items-center gap-2">
+          <div
+            onClick={() => window.open("https://www.canva.com/design/DAG6wVmjir0/-1LDgnGSJIRzpqVMuNNerA/view?utm_content=DAG6wVmjir0&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hd2f0fcd325", "_blank")}
+            className="
+              w-24 h-24 rounded-full
+              bg-white/90 shadow-lg backdrop-blur
+              border border-purple-200
+              flex items-center justify-center
+              hover:scale-105 active:scale-95
+              transition-all cursor-pointer
+              animate-[hossiiWiggle_3s_ease-in-out_infinite]
+              hover:animate-[hossiiHover_0.4s_ease-in-out]
+            "
+          >
+            <img
+              src={HOSSII_EXPRESSIONS.normal}
+              alt="Hossii"
+              className="w-16 h-16 rounded-full"
+            />
+          </div>
+          <span className="text-xs text-white drop-shadow font-medium">
+            Hossii Story
           </span>
-        </a>
+        </div>
 
-        {/* ② Hossii 絵本リンクボタン（新規追加） */}
-        <a
-          href="https://www.canva.com/design/DAG6wVmjir0/-1LDgnGSJIRzpqVMuNNerA/view?utm_content=DAG6wVmjir0&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hd2f0fcd325"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="relative w-14 h-14 rounded-full bg-white shadow-lg border border-[#F3E8FF]
-                     flex items-center justify-center hover:scale-105 active:scale-95 transition"
-        >
-          {/* Hossiiの顔アイコンをボタンの上に重ねる */}
-          <img
-            src={HOSSII_EXPRESSIONS.normal}
-            alt="Hossii"
-            className="absolute -top-5 w-10 h-10 drop-shadow-lg"
-          />
-          <span className="text-[10px] font-semibold text-[#6C3C86]">
-            絵本
+        {/* ② Leapday Web のボタン */}
+        <div className="flex items-center gap-2">
+          <a
+            href="https://leapday-ibaraki.jp/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-14 h-14 rounded-full bg-white shadow-lg border border-[#F3E8FF]
+                       flex items-center justify-center hover:scale-105 active:scale-95 transition
+                       animate-[hossiiWiggle_3s_ease-in-out_infinite]
+                       hover:animate-[hossiiHover_0.4s_ease-in-out]"
+          >
+            <span className="text-sm font-semibold text-[#6C3C86]">
+              LP
+            </span>
+          </a>
+          <span className="text-xs text-white drop-shadow font-medium">
+            Leapday website
           </span>
-        </a>
+        </div>
       </div>
 
       {/* 右下：フルスクリーン切り替えボタン */}
@@ -1463,6 +1479,18 @@ export default function LeapdayScreen() {
 
       {/* アニメーション */}
       <style>{`
+        @keyframes hossiiWiggle {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.07); }
+        }
+
+        @keyframes hossiiHover {
+          0% { transform: scale(1); }
+          33% { transform: scale(1.05); }
+          66% { transform: scale(0.97); }
+          100% { transform: scale(1); }
+        }
+
         @keyframes bubble-float {
           0%, 100% {
             transform: translateY(0px);
