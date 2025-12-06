@@ -19,14 +19,14 @@ const VENUE_TARGETS = [
 ];
 
 const TALK_TARGETS = [
-  { id: 'T01', label: '① トークセッション1' },
-  { id: 'T02', label: '② トークセッション2' },
-  { id: 'T03', label: '③ トークセッション3' },
-  { id: 'T04', label: '④ トークセッション4' },
-  { id: 'T05', label: '⑤ トークセッション5' },
-  { id: 'T06', label: '⑥ トークセッション6' },
-  { id: 'T07', label: '⑦ トークセッション7' },
-  { id: 'T08', label: '⑧ トークセッション8' },
+  { id: 'T01', label: 'Grow to GO!! Project.' },
+  { id: 'T02', label: 'タピこん' },
+  { id: 'T03', label: '霞連隊' },
+  { id: 'T04', label: '野菜のキラメキ' },
+  { id: 'T05', label: '勝ち犬' },
+  { id: 'T06', label: 'Linking' },
+  { id: 'T07', label: 'ゲストトークセッション' },
+  { id: 'T08', label: 'frogs生×保護者セッション' },
 ];
 
 const PITCH_TARGETS = [
@@ -172,6 +172,12 @@ const HOSSII_LINES_BY_EMOTION_KEY: Record<string, string> = {
   fun: 'わ〜い！たのしい〜っ！',
 };
 
+// 🆕 応援リアクション用のセリフ
+const HOSSII_LINES_BY_SUPPORT_KEY: Record<string, string> = {
+  love: 'ぽよん…！すき〜っ！💖',
+  star: 'きらっ！ほしだよ〜っ🌟',
+};
+
 const SUPPORT_REACTIONS = [
   { key: 'cheer', emoji: '📣', label: 'おうえん' },
   { key: 'sparkle', emoji: '✨', label: 'きらきら' },
@@ -179,6 +185,9 @@ const SUPPORT_REACTIONS = [
   { key: 'fire', emoji: '🔥', label: 'アツい' },
   { key: 'idea', emoji: '💡', label: 'アイデア' },
   { key: 'yay', emoji: '🙌', label: 'やったね' },
+  // ❤️ & 🌟（追加）
+  { key: 'love', emoji: '❤️', label: 'スキ' },
+  { key: 'star', emoji: '🌟', label: 'ホシ' },
 ];
 
 const PITCHES = [
@@ -503,9 +512,19 @@ export default function LeapdayPost() {
       const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
       const filePath = `hossii/${fileName}`;
 
+      console.log("📤 Uploading to Supabase...", {
+        supabaseUrl: import.meta.env.VITE_SUPABASE_URL,
+        bucket: "hossii",
+        filePath,
+        fileType: imageFile?.type,
+        fileSize: imageFile?.size,
+      });
+
       const { error: uploadError } = await supabase.storage
         .from('hossii')
         .upload(filePath, imageFile, { cacheControl: '3600', upsert: false });
+
+      console.log("📥 upload result:", uploadError);
 
       if (uploadError) {
         console.error("❌ Storage upload error:", uploadError);
@@ -515,6 +534,8 @@ export default function LeapdayPost() {
         const { data: urlData } = supabase.storage
           .from('hossii')
           .getPublicUrl(filePath);
+
+        console.log("🌐 public URL:", urlData?.publicUrl);
 
         imageUrl = urlData.publicUrl;
       }
@@ -558,7 +579,13 @@ export default function LeapdayPost() {
       console.error(error);
       setToast('送信に失敗しました…');
     } else {
-      setHossiiToastMessage(imageFile ? '写真と一緒に送ったよ！📸🌸' : '応援を送ったよ！🌸');
+      // 🆕 リアクションに応じたセリフを表示
+      const supportLine = selectedSupport ? HOSSII_LINES_BY_SUPPORT_KEY[selectedSupport] : null;
+      if (supportLine) {
+        setHossiiToastMessage(supportLine);
+      } else {
+        setHossiiToastMessage(imageFile ? '写真と一緒に送ったよ！📸🌸' : '応援を送ったよ！🌸');
+      }
       setShowHossiiToast(true);
       setSelectedSupport(null);
       setMessage('');
@@ -824,21 +851,6 @@ export default function LeapdayPost() {
                       <button
                         type="button"
                         onClick={() => {
-                          setTargetGroup('talk');
-                          setToPitchId(null);
-                        }}
-                        className={`px-3 py-1 rounded-full text-xs border transition-colors ${
-                          targetGroup === 'talk'
-                            ? 'bg-[#FFE7F7] text-[#6C3C86] border-[#F5BDEB] shadow-sm'
-                            : 'bg-white text-[#9CA3AF] border-[#F3E8FF] hover:bg-[#FFF5FF]'
-                        }`}
-                      >
-                        #トークセッション
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => {
                           setTargetGroup('pitch');
                           setToPitchId(null);
                         }}
@@ -849,6 +861,21 @@ export default function LeapdayPost() {
                         }`}
                       >
                         #ピッチ
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setTargetGroup('talk');
+                          setToPitchId(null);
+                        }}
+                        className={`px-3 py-1 rounded-full text-xs border transition-colors ${
+                          targetGroup === 'talk'
+                            ? 'bg-[#FFE7F7] text-[#6C3C86] border-[#F5BDEB] shadow-sm'
+                            : 'bg-white text-[#9CA3AF] border-[#F3E8FF] hover:bg-[#FFF5FF]'
+                        }`}
+                      >
+                        #トークセッション
                       </button>
                     </div>
 
@@ -1079,21 +1106,6 @@ export default function LeapdayPost() {
                       <button
                         type="button"
                         onClick={() => {
-                          setTargetGroup('talk');
-                          setToPitchId(null);
-                        }}
-                        className={`px-3 py-1 rounded-full text-xs border transition-colors ${
-                          targetGroup === 'talk'
-                            ? 'bg-[#FFE7F7] text-[#6C3C86] border-[#F5BDEB] shadow-sm'
-                            : 'bg-white text-[#9CA3AF] border-[#F3E8FF] hover:bg-[#FFF5FF]'
-                        }`}
-                      >
-                        #トークセッション
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => {
                           setTargetGroup('pitch');
                           setToPitchId(null);
                         }}
@@ -1104,6 +1116,21 @@ export default function LeapdayPost() {
                         }`}
                       >
                         #ピッチ
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setTargetGroup('talk');
+                          setToPitchId(null);
+                        }}
+                        className={`px-3 py-1 rounded-full text-xs border transition-colors ${
+                          targetGroup === 'talk'
+                            ? 'bg-[#FFE7F7] text-[#6C3C86] border-[#F5BDEB] shadow-sm'
+                            : 'bg-white text-[#9CA3AF] border-[#F3E8FF] hover:bg-[#FFF5FF]'
+                        }`}
+                      >
+                        #トークセッション
                       </button>
                     </div>
 

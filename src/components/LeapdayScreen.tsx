@@ -139,8 +139,8 @@ const PITCH_NAMES: Record<string, string> = {
   P11: '⑪ 根本るか',
 };
 
-const ACTION_LIMIT = 200;  // 🔄 負荷軽減のため 1000 → 200 に削減（もり画面は軽く）
-const MAX_VISIBLE = 80;    // 画面に同時に浮かせる最大数（100 → 80 に削減）
+const ACTION_LIMIT = 200;  // 🔄 負荷軽減のため 1000 → 200 に削減（もり画面は軽く）※画像付き投稿も含めて取得
+const MAX_VISIBLE = 200;   // 画面に同時に浮かせる最大数（画像付き投稿を含めて十分な件数を表示）
 const MAX_BURST_STARS = 120;
 
 // 🎨 エフェクトの ON/OFF フラグ（負荷確認用）
@@ -1253,7 +1253,9 @@ export default function LeapdayScreen() {
               ? '☁️'
               : '💬';
 
-          const hasMessage = bubble.message && bubble.message.length > 0;
+          const hasMessage = !!(bubble.message && bubble.message.length > 0);
+          const hasImage = !!bubble.image_url;
+          const hasContent = hasMessage || hasImage;
           const msg = bubble.message ?? '';
           const MAX_LEN = 40;
           const isLong = msg.length > MAX_LEN;
@@ -1295,22 +1297,26 @@ export default function LeapdayScreen() {
                 }}
               >
                 <div className="text-3xl flex-shrink-0">{emoji}</div>
-                {hasMessage && (
+                {hasContent && (
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm break-words">
-                      {isLong && !isExpanded ? shortText : msg}
-                    </div>
-                    {isLong && (
-                      <div className="mt-1 text-[10px] text-orange-500 underline">
-                        {isExpanded ? 'とじる' : 'もっと見る'}
-                      </div>
+                    {hasMessage && (
+                      <>
+                        <div className="text-sm break-words">
+                          {isLong && !isExpanded ? shortText : msg}
+                        </div>
+                        {isLong && (
+                          <div className="mt-1 text-[10px] text-orange-500 underline">
+                            {isExpanded ? 'とじる' : 'もっと見る'}
+                          </div>
+                        )}
+                      </>
                     )}
                     
                     {/* 🆕 画像があれば表示 */}
-                    {bubble.image_url && (
+                    {hasImage && (
                       <div className="mt-2">
                         <img
-                          src={bubble.image_url}
+                          src={bubble.image_url!}
                           alt="投稿画像"
                           className="w-full max-h-32 object-cover rounded-xl border border-white/40 shadow-sm"
                           onError={(e) => {
@@ -1348,15 +1354,17 @@ export default function LeapdayScreen() {
               {/* 🖥 PC / スクリーン：全文＋少し大きめフォント */}
               <div className="hidden md:flex items-start gap-3">
                 <div className="text-3xl flex-shrink-0">{emoji}</div>
-                {hasMessage && (
+                {hasContent && (
                   <div className="flex-1 min-w-0">
-                    <div className="text-base break-words">{msg}</div>
+                    {hasMessage && (
+                      <div className="text-base break-words">{msg}</div>
+                    )}
                     
                     {/* 🆕 画像があれば表示 */}
-                    {bubble.image_url && (
+                    {hasImage && (
                       <div className="mt-2">
                         <img
-                          src={bubble.image_url}
+                          src={bubble.image_url!}
                           alt="投稿画像"
                           className="w-full max-h-32 object-cover rounded-xl border border-white/40 shadow-sm"
                           onError={(e) => {

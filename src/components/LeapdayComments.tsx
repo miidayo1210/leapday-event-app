@@ -21,14 +21,14 @@ const VENUE_LABELS: Record<string, string> = {
 
 const TALK_LABELS: Record<string, string> = {
   ALL: 'トークセッション：全部',
-  T01: '① トークセッション1',
-  T02: '② トークセッション2',
-  T03: '③ トークセッション3',
-  T04: '④ トークセッション4',
-  T05: '⑤ トークセッション5',
-  T06: '⑥ トークセッション6',
-  T07: '⑦ トークセッション7',
-  T08: '⑧ トークセッション8',
+  T01: 'Grow to GO!! Project.',
+  T02: 'タピこん',
+  T03: '霞連隊',
+  T04: '野菜のキラメキ',
+  T05: '勝ち犬',
+  T06: 'Linking',
+  T07: 'ゲストトークセッション',
+  T08: 'frogs生×保護者セッション',
 };
 
 const PITCH_LABELS: Record<string, string> = {
@@ -94,6 +94,10 @@ const EMOJI_MAP: Record<string, string> = {
   curious: '🤔',
   awake: '😳',
   clap: '🙌',
+  
+  // ❤️ & 🌟（追加）
+  love: '❤️',   // スキ！
+  star: '🌟',   // ホシ！
 };
 
 // 🆕 target_group に応じて ID → 名前を変換するヘルパー関数
