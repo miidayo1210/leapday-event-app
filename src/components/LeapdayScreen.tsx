@@ -198,6 +198,9 @@ export default function LeapdayScreen() {
     emotion: 0,
   });
 
+  // 🔊 音声 ON / OFF フラグ
+  const [soundOn, setSoundOn] = useState(true);
+
   // 📱 長文展開用の state
   const [expandedMessageIds, setExpandedMessageIds] = useState<string[]>([]);
   // 🔍 アクティブなバブル（ホバー/タップで最前面に表示）
@@ -237,6 +240,7 @@ export default function LeapdayScreen() {
 
   /** 音声読み上げヘルパー関数（ちょっと高めで可愛い声） */
   function speakText(text: string) {
+    if (!soundOn) return; // 🔊 音声OFFの場合は読み上げしない
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
       console.warn('speechSynthesis が使えない環境です');
       return;
@@ -859,8 +863,20 @@ export default function LeapdayScreen() {
       className="relative w-screen h-screen overflow-hidden"
       style={{ backgroundColor: '#000000' }}
     >
+      {/* 🔊 音声 ON / OFF ボタン */}
+      <button
+        type="button"
+        onClick={() => setSoundOn((v) => !v)}
+        className="absolute top-4 left-4 z-40 flex items-center gap-1 rounded-full
+                   bg-white/80 hover:bg-white shadow-md px-3 py-1.5
+                   text-[11px] md:text-xs text-slate-700 backdrop-blur"
+      >
+        <span>{soundOn ? '🔊' : '🔇'}</span>
+        <span>{soundOn ? '音声ON' : '音声OFF'}</span>
+      </button>
+
       {/* 🎬 モード切り替えタブ（PC大画面用） */}
-      <div className="fixed top-4 left-4 z-40 inline-flex rounded-full bg-white/80 p-1 shadow-sm">
+      <div className="fixed top-4 right-4 z-40 inline-flex rounded-full bg-white/80 p-1 shadow-sm">
         <button
           type="button"
           onClick={() => setMode('main')}
