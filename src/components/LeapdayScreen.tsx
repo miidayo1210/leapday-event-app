@@ -126,17 +126,24 @@ const TARGET_GROUP_LABELS: Record<string, string> = {
 // 🆕 ピッチ登壇者の一覧
 const PITCH_NAMES: Record<string, string> = {
   ALL: '全体',
-  P01: '① 横川史佳',
-  P02: '② 國府田美心',
-  P03: '③ 須田煌生',
-  P04: '④ 大久保亜織',
-  P05: '⑤ 藤田姫詩',
-  P06: '⑥ 和田愛琉',
-  P07: '⑦ 大屋諒',
-  P08: '⑧ 笹本陽葉里',
-  P09: '⑨ 古橋武大',
-  P10: '⑩ 内野未唯',
-  P11: '⑪ 根本るか',
+  P01: '横川史佳',
+  P02: '國府田美心',
+  P03: '須田煌生',
+  P04: '大久保亜織',
+  P05: '藤田姫詩',
+  P06: '和田愛琉',
+  P07: '大屋諒',
+  P08: '笹本陽葉里',
+  P09: '古橋武大',
+  P10: '内野未唯',
+  P11: '根本るか',
+  // 追加分
+  P12: 'Grow to GO!!Project.',
+  P13: 'タピこん',
+  P14: '霞連隊',
+  P15: '野菜のキラメキ',
+  P16: '勝ち犬',
+  P17: 'Linking',
 };
 
 const ACTION_LIMIT = 200;  // 🔄 負荷軽減のため 1000 → 200 に削減（もり画面は軽く）※画像付き投稿も含めて取得
@@ -797,6 +804,19 @@ export default function LeapdayScreen() {
     filteredActions.some((a) => a.id === b.id)
   );
 
+  // 🧮 もりで表示されている actions から集計
+  const messageCount = filteredActions.filter(
+    (a) => a.channel === 'support' && a.message && a.message.length > 0
+  ).length;
+
+  const questionCount = filteredActions.filter(
+    (a) => a.channel === 'qa'
+  ).length;
+
+  const nowCount = filteredActions.filter(
+    (a) => a.channel === 'emotion'
+  ).length;
+
   // モードごとの表示
   if (mode === 'mini') {
     return (
@@ -1205,7 +1225,7 @@ export default function LeapdayScreen() {
           <span>
             メッセージ：
             <span className="font-semibold text-lg">
-              {totalCounts.support}
+              {messageCount}
             </span>
           </span>
         </div>
@@ -1214,7 +1234,7 @@ export default function LeapdayScreen() {
           <span>
             質問：
             <span className="font-semibold text-lg">
-              {totalCounts.qa}
+              {questionCount}
             </span>
           </span>
         </div>
@@ -1223,7 +1243,7 @@ export default function LeapdayScreen() {
           <span>
             いま！：
             <span className="font-semibold text-lg">
-              {totalCounts.emotion}
+              {nowCount}
             </span>
           </span>
         </div>

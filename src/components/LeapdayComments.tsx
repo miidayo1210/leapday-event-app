@@ -21,12 +21,6 @@ const VENUE_LABELS: Record<string, string> = {
 
 const TALK_LABELS: Record<string, string> = {
   ALL: 'トークセッション：全部',
-  T01: 'Grow to GO!! Project.',
-  T02: 'タピこん',
-  T03: '霞連隊',
-  T04: '野菜のキラメキ',
-  T05: '勝ち犬',
-  T06: 'Linking',
   T07: 'ゲストトークセッション',
   T08: 'frogs生×保護者セッション',
 };
