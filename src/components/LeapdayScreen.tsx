@@ -1118,51 +1118,40 @@ export default function LeapdayScreen() {
       )}
 
       {/* 左下のメニュー（Leapdayボタン + Hossii絵本ボタン） */}
-      <div className="fixed left-4 bottom-4 z-50 flex flex-col gap-3">
-        {/* ① Hossii 絵本リンクボタン */}
-        <div className="flex items-center gap-2">
-          <div
-            onClick={() => window.open("https://www.canva.com/design/DAG6wVmjir0/-1LDgnGSJIRzpqVMuNNerA/view?utm_content=DAG6wVmjir0&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hd2f0fcd325", "_blank")}
-            className="
-              w-24 h-24 rounded-full
-              bg-white/90 shadow-lg backdrop-blur
-              border border-purple-200
-              flex items-center justify-center
-              hover:scale-105 active:scale-95
-              transition-all cursor-pointer
-              animate-[hossiiWiggle_3s_ease-in-out_infinite]
-              hover:animate-[hossiiHover_0.4s_ease-in-out]
-            "
-          >
-            <img
-              src={HOSSII_EXPRESSIONS.normal}
-              alt="Hossii"
-              className="w-16 h-16 rounded-full"
-            />
-          </div>
-          <span className="text-xs text-white drop-shadow font-medium">
-            Hossii Story
-          </span>
-        </div>
-
-        {/* ② Leapday Web のボタン */}
-        <div className="flex items-center gap-2">
+      <div className="fixed left-4 bottom-4 z-40 flex items-center gap-3">
+        {/* 丸ボタン2つを縦に並べる */}
+        <div className="flex flex-col gap-3">
+          {/* ① Leapday Web のボタン */}
           <a
             href="https://leapday-ibaraki.jp/"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-14 h-14 rounded-full bg-white shadow-lg border border-[#F3E8FF]
-                       flex items-center justify-center hover:scale-105 active:scale-95 transition
-                       animate-[hossiiWiggle_3s_ease-in-out_infinite]
-                       hover:animate-[hossiiHover_0.4s_ease-in-out]"
+            className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg border border-white/70 bg-white/90 hover:scale-105 active:scale-95 transition-transform duration-150 cursor-pointer animate-[hossiiWiggle_3s_ease-in-out_infinite] hover:animate-[hossiiHover_0.4s_ease-in-out]"
           >
             <span className="text-sm font-semibold text-[#6C3C86]">
               LP
             </span>
           </a>
-          <span className="text-xs text-white drop-shadow font-medium">
-            Leapday website
-          </span>
+
+          {/* ② Hossii 絵本リンクボタン */}
+          <a
+            href="https://www.canva.com/design/DAG6wVmjir0/-1LDgnGSJIRzpqVMuNNerA/view?utm_content=DAG6wVmjir0&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hd2f0fcd325"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg border border-white/70 bg-white/90 hover:scale-105 active:scale-95 transition-transform duration-150 cursor-pointer animate-[hossiiWiggle_3s_ease-in-out_infinite] hover:animate-[hossiiHover_0.4s_ease-in-out]"
+          >
+            <img
+              src={HOSSII_EXPRESSIONS.normal}
+              alt="Hossii"
+              className="w-12 h-12 rounded-full"
+            />
+          </a>
+        </div>
+
+        {/* 右側にラベルテキストを縦に並べる */}
+        <div className="flex flex-col text-[11px] md:text-xs text-white/90 drop-shadow-sm">
+          <span>・Leapday website</span>
+          <span>・Hossii Story</span>
         </div>
       </div>
 
