@@ -1118,40 +1118,43 @@ export default function LeapdayScreen() {
       )}
 
       {/* 左下のメニュー（Leapdayボタン + Hossii絵本ボタン） */}
-      <div className="fixed left-4 bottom-4 z-40 flex items-center gap-3">
-        {/* 丸ボタン2つを縦に並べる */}
-        <div className="flex flex-col gap-3">
-          {/* ① Leapday Web のボタン */}
-          <a
-            href="https://leapday-ibaraki.jp/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg border border-white/70 bg-white/90 hover:scale-105 active:scale-95 transition-transform duration-150 cursor-pointer animate-[hossiiWiggle_3s_ease-in-out_infinite] hover:animate-[hossiiHover_0.4s_ease-in-out]"
-          >
-            <span className="text-sm font-semibold text-[#6C3C86]">
-              LP
-            </span>
-          </a>
-
-          {/* ② Hossii 絵本リンクボタン */}
+      <div className="fixed left-4 bottom-4 z-40 flex items-center gap-2">
+        {/* 丸ボタン2つを横に並べる */}
+        <div className="flex items-center gap-2">
+          {/* ① Hossii 絵本リンクボタン（左） */}
           <a
             href="https://www.canva.com/design/DAG6wVmjir0/-1LDgnGSJIRzpqVMuNNerA/view?utm_content=DAG6wVmjir0&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hd2f0fcd325"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg border border-white/70 bg-white/90 hover:scale-105 active:scale-95 transition-transform duration-150 cursor-pointer animate-[hossiiWiggle_3s_ease-in-out_infinite] hover:animate-[hossiiHover_0.4s_ease-in-out]"
+            className="w-8 h-8 rounded-full flex items-center justify-center shadow-lg border border-white/70 bg-white/90 hover:scale-105 active:scale-95 transition-transform duration-150 cursor-pointer animate-[hossiiWiggle_3s_ease-in-out_infinite] hover:animate-[hossiiHover_0.4s_ease-in-out]"
+            style={{ transformOrigin: 'center' }}
           >
             <img
               src={HOSSII_EXPRESSIONS.normal}
               alt="Hossii"
-              className="w-12 h-12 rounded-full"
+              className="w-6 h-6 rounded-full"
             />
+          </a>
+
+          {/* ② Leapday Web のボタン（右） */}
+          <a
+            href="https://leapday-ibaraki.jp/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-8 h-8 rounded-full flex items-center justify-center shadow-lg border border-white/70 bg-white/90 hover:scale-105 active:scale-95 transition-transform duration-150 cursor-pointer animate-[hossiiWiggle_3s_ease-in-out_infinite] hover:animate-[hossiiHover_0.4s_ease-in-out]"
+            style={{ transformOrigin: 'center' }}
+          >
+            <span className="text-[10px] font-semibold text-[#6C3C86]">
+              LP
+            </span>
           </a>
         </div>
 
-        {/* 右側にラベルテキストを縦に並べる */}
-        <div className="flex flex-col text-[11px] md:text-xs text-white/90 drop-shadow-sm">
-          <span>・Leapday website</span>
-          <span>・Hossii Story</span>
+        {/* 右側にラベルテキストを横に並べる */}
+        <div className="flex items-center gap-2 text-xs text-gray-700 drop-shadow-sm">
+          <span>Hossii Story</span>
+          <span>・</span>
+          <span>Leapday website</span>
         </div>
       </div>
 
